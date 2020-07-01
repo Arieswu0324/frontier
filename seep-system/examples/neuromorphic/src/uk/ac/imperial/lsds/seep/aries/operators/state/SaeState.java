@@ -10,10 +10,10 @@ import static org.ujmp.core.calculation.Calculation.Ret.NEW;
 
 /*
  * @Author:cw415@imperial.ac.uk
- * @Description: Class used for state store
+ * @Description: Class used for local state store
  * @Version:1.0
  * @Date:2020/6/19
- * @Modified by:
+ * @Modified by: Deprecated for optimised query design
  */
 
 public class SaeState implements CustomState, Partitionable {

@@ -10,6 +10,7 @@
  ******************************************************************************/
 package uk.ac.imperial.lsds.seep.operator;
 
+import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.util.List;
 
@@ -19,7 +20,7 @@ public interface OperatorCode extends Serializable{
 
 	public DistributedApi api = DistributedApi.getInstance();
 	
-	public void setUp();
+	public void setUp() throws FileNotFoundException;
 	public void processData(DataTuple data);
 	public void processData(List<DataTuple> dataList);
 	

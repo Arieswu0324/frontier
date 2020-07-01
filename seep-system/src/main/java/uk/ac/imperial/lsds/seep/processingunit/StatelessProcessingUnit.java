@@ -296,7 +296,7 @@ public class StatelessProcessingUnit implements IProcessingUnit {
 				// REMOTE SYNC
 				else if(dest instanceof SynchronousCommunicationChannel){
 					///\fixme{do some proper thing with var now}
-					outputQueues.get(target).sendToDownstream(dt, dest);
+					outputQueues.get(target).ToDownstream(dt, dest);
 //System.out.println("Send to: "+dest.toString());
 				}
 				// LOCAL

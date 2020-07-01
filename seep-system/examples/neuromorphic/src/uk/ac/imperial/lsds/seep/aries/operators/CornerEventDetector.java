@@ -4,7 +4,7 @@ package uk.ac.imperial.lsds.seep.aries.operators;
  * @Description: Base class for Corner Event Detection Query
  * @Version:1.0
  * @Date:2020/6/19
- * @Modified by:
+ * @Modified by: Aries: Deprecated for optimised query design
  */
 
 import uk.ac.imperial.lsds.seep.aries.operators.state.SaeState;

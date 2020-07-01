@@ -10,6 +10,7 @@
  ******************************************************************************/
 package uk.ac.imperial.lsds.seep.operator;
 
+import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -278,7 +279,7 @@ public class Operator implements Serializable, EndPoint, Connectable, Callback {
 		operatorCode.processData(dataList);
 	}
 
-	public void setUp(){
+	public void setUp() throws FileNotFoundException {
 		operatorCode.setUp();
 	}
 

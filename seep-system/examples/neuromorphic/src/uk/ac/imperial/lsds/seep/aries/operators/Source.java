@@ -16,6 +16,7 @@ import uk.ac.imperial.lsds.seep.comm.serialization.messages.TuplePayload;
 import uk.ac.imperial.lsds.seep.operator.StatelessOperator;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +25,6 @@ public class Source implements StatelessOperator {
     private static final Logger logger = LoggerFactory.getLogger(Source.class);
 
     private final String testDir="resources/shapes_dataset/5000_events.txt";
-    String sensorId = "sensor01";   // put into config file later
     String eventLine=null;
 
     @Override
@@ -36,28 +36,38 @@ public class Source implements StatelessOperator {
 
     @Override
     public void processData(DataTuple dt) {
+        int batchId = 0;
+        int eventCount = 0;
+        ArrayList<Event> eventList = new ArrayList<>();
 
             Map<String, Integer> mapper = api.getDataMapper();
             DataTuple data = new DataTuple(mapper, new TuplePayload());
-            long tupleId = 0;
+
         try{
-            BufferedReader fr = new BufferedReader(new FileReader(testDir));
+            BufferedReader fr = new BufferedReader(new FileReader(testDir));    //read data through IO streams
+
             while((eventLine=fr.readLine())!=null){ //condition: EOF
                 eventLine = fr.readLine();
                 String[] strings = eventLine.split("\\s+");
-                String timestamp = strings[0];
-                String x = strings[1];
-                String y = strings[2];
-                String polarity = strings[3];
-                String label = "false";
+//                String timestamp = strings[0];
+//                String x = strings[1];
+//                String y = strings[2];
+//                String polarity = strings[3];
+//                String label = "false";
+                Event event = new Event(strings[0],strings[1],strings[2],strings[3]);
+                eventCount++;
+                eventList.add(event);
 
-                DataTuple output = data.newTuple(sensorId,tupleId,timestamp,x,y,polarity,label);
-                output.getPayload().timestamp = System.currentTimeMillis();
+                if(eventCount%50==0) {  //batch size 50 for experiment, fix me when EOF but not 50
+                    DataTuple output = data.newTuple(batchId, eventList);
+                    api.send_highestWeight(output);
+                    batchId++;
 
-                api.send_highestWeight(output);
-                logger.info("Source sending event tuple from "+sensorId+", tupleId= "+tupleId+": " +
-                        "timestamp="+timestamp+", x="+x+", y="+y+", polarity="+polarity);
-                tupleId++;
+                    //empty eventList for next batch
+                    eventCount=0;
+                    eventList.clear();
+                }
+
             }
             fr.close();
         }catch(Exception e){
