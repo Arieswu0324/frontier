@@ -10,21 +10,20 @@ import java.io.Serializable;
  * @Modified by:
  */
 
-public class Event implements Serializable {
+public class Event implements Serializable {//fix me : cast final, cannot be changed except for label
     private static final long serialVersionUID = 1L;
 
-    public String x;
-    public String y;
-    public String timestamp;
-    public String polarity;
+    public int x;
+    public int y;
+    public double timestamp;
+    public int polarity;
     public String label;
 
-    Event(){}
     Event(String timestamp, String x, String y, String polarity){
-        this.timestamp = timestamp;
-        this.x = x;
-        this.y=y;
-        this.polarity=polarity;
+        this.timestamp = Double.valueOf(timestamp);
+        this.x = Integer.valueOf(x);
+        this.y=Integer.valueOf(y);
+        this.polarity=Integer.valueOf(polarity);
         this.label="false";
     }
 }

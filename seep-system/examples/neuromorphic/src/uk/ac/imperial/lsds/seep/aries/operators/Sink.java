@@ -21,6 +21,7 @@ public class Sink implements StatelessOperator {
     @Override
     public void processData(DataTuple data) {
 
+
     }
 
     @Override

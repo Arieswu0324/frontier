@@ -12,8 +12,10 @@ package uk.ac.imperial.lsds.seep.comm.serialization;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import uk.ac.imperial.lsds.seep.aries.operators.Event;
 import uk.ac.imperial.lsds.seep.comm.serialization.messages.Payload;
 import uk.ac.imperial.lsds.seep.comm.serialization.messages.TuplePayload;
 
@@ -181,6 +183,11 @@ public class DataTuple implements DataTupleI, Serializable{
 	public Object getValue(String attribute) {
 //		System.out.println("getValue = attrValues.size -> "+payload.attrValues.size()+" accessed in "+idxMapper.get(attribute));
 		return (Object)payload.attrValues.get(idxMapper.get(attribute));
+	}
+
+	//for event-batching, archive to DataTupleI later
+	public List<Event> getEvents(String attribute){
+		return (List)payload.attrValues.get(idxMapper.get(attribute));
 	}
 	
 	@Override
