@@ -10,6 +10,7 @@
  ******************************************************************************/
 package uk.ac.imperial.lsds.seep.operator.compose;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -168,7 +169,7 @@ public class SubOperator implements SubOperatorAPI, CommunicationPrimitives, Cal
 	}
 
 	@Override
-	public void setUp() {
+	public void setUp() throws FileNotFoundException {
 		code.setUp();
 	}
 

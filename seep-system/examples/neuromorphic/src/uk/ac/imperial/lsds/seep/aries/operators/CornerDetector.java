@@ -2,8 +2,9 @@ package uk.ac.imperial.lsds.seep.aries.operators;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.ujmp.core.doublematrix.DoubleMatrix;
 import uk.ac.imperial.lsds.seep.comm.serialization.DataTuple;
+import uk.ac.imperial.lsds.seep.event.Event;
+import uk.ac.imperial.lsds.seep.manet.stats.Stats;
 import uk.ac.imperial.lsds.seep.operator.StatelessOperator;
 
 import java.io.FileNotFoundException;
@@ -22,21 +23,64 @@ public class CornerDetector implements StatelessOperator {
     private static final long serialVersionUID = 1L;
     private static final Logger logger = LoggerFactory.getLogger(CornerDetector.class);
 
+//    private Stats stats;
+//    private Stats utilStats;      //not sure what are these used for
+
+       static final int[][] kSmallCircle = {{0, 3}, {1, 3}, {2, 2}, {3, 1},
+                {3, 0}, {3, -1}, {2, -2}, {1, -3},
+                {0, -3}, {-1, -3}, {-2, -2}, {-3, -1},
+                {-3, 0}, {-3, 1}, {-2, 2}, {-1, 3}};
+        static final int[][] kLargeCircle = {{0, 4}, {1, 4}, {2, 3}, {3, 2},
+                {4, 1}, {4, 0}, {4, -1}, {3, -2},
+                {2, -3}, {1, -4}, {0, -4}, {-1, -4},
+                {-2, -3}, {-3, -2}, {-4, -1}, {-4, 0},
+                {-4, 1}, {-3, 2}, {-2, 3}, {-1, 4}};
+
+        static final int kSmallCircleSize = 16;
+        static final int kLargeCircleSize = 20;
+        static final int kSmallMinThresh = 3;
+        static final int kSmallMaxThresh = 6;
+        static final int kLargeMinThresh = 4;
+        static final int kLargeMaxThresh = 8;
+
+
     @Override
     public void setUp() throws FileNotFoundException {
+        logger.info("CornerDetector setup complete");
+//        stats = new Stats(api.getOperatorId());
+//        utilStats = new Stats(api.getOperatorId());
 
     }
 
     @Override
     public void processData(DataTuple data) {
 
-        int batchId = data.getInt("batchId");
+        //long tProcessStart = System.currentTimeMillis();
+
+        long tupleId = data.getLong("tupleId");
         ArrayList<Event> eventList = (ArrayList<Event>) data.getEvents("eventList");
 
-        ArrayList<Event> newEventList = cornerDetector(eventList);
+        System.out.println("CornerDetector received tuple: ID "+tupleId+"----"+eventList.size()+" events");
 
-        DataTuple output = data.newTuple(batchId,newEventList);
+        ArrayList<Event> newEventList = cornerDetector(eventList);  //go through arc* algorithm
+
+        DataTuple output = data.setValues(tupleId,newEventList);
+
+        for(Event e : newEventList){
+            if(e.label=="true"){
+                System.out.println("Corner event: "+e.timestamp+"---label: "+e.label);
+
+        }
+
+        }
+        //api.send(output);
+//        long tProcessEnd = System.currentTimeMillis();
+//        stats.add(tProcessEnd,eventList.toString().getBytes().length);
+//        utilStats.addWorkDone(tProcessEnd,tProcessEnd-tProcessStart);
         api.send_highestWeight(output);
+        System.out.println("CornerDetector sending tuple: ID "+tupleId+"----"+newEventList.size()+" events" +
+                "---starts with timestamp "+ newEventList.get(0).timestamp);
+
     }
 
     private ArrayList<Event> cornerDetector(ArrayList<Event> eventList) {
@@ -47,6 +91,8 @@ public class CornerDetector implements StatelessOperator {
         sae[1] = new SAE(240,180);
         saeLatest[0]=new SAE(240,180);
         saeLatest[1]=new SAE(240,180);
+
+        int cornerCnt = 0;
 
         for(Event event: eventList){
             int x = event.x;
@@ -71,14 +117,19 @@ public class CornerDetector implements StatelessOperator {
 
             //return if too close to the corner
             final int borderLimit = 4;
-            if((x<borderLimit||x>240-borderLimit)||(y<borderLimit||y>180-borderLimit))
+            if((x<borderLimit||x>=240-borderLimit)||(y<borderLimit||y>=180-borderLimit))
                 continue;   //event.label = false by default
 
              //check corner event, arc* algorithm
-            event.label = String.valueOf(isCorner(event,sae[event.polarity]));
+            //event.label = String.valueOf(isCorner(event,sae[event.polarity]));
+            if(isCorner(event,sae[event.polarity])){
+                event.label="true";
+                //System.out.println("Corner event: "+ event.timestamp+"---label: "+ event.label);
+                cornerCnt++;
+            }
         }
 
-
+        System.out.println(cornerCnt+" events are detected");
             return eventList;
     }
 
@@ -87,22 +138,6 @@ public class CornerDetector implements StatelessOperator {
         int x = event.x;
         int y = event.y;
 
-        int[][] kSmallCircle = {{0, 3}, {1, 3}, {2, 2}, {3, 1},
-                {3, 0}, {3, -1}, {2, -2}, {1, -3},
-                {0, -3}, {-1, -3}, {-2, -2}, {-3, -1},
-                {-3, 0}, {-3, 1}, {-2, 2}, {-1, 3}};
-        int[][] kLargeCircle = {{0, 4}, {1, 4}, {2, 3}, {3, 2},
-                {4, 1}, {4, 0}, {4, -1}, {3, -2},
-                {2, -3}, {1, -4}, {0, -4}, {-1, -4},
-                {-2, -3}, {-3, -2}, {-4, -1}, {-4, 0},
-                {-4, 1}, {-3, 2}, {-2, 3}, {-1, 4}};
-
-        final int kSmallCircleSize = 16;
-        final int kLargeCircleSize = 20;
-        final int kSmallMinThresh = 3;
-        final int kSmallMaxThresh = 6;
-        final int kLargeMinThresh = 4;
-        final int kLargeMaxThresh = 8;
 
         double arcTimestamp = sae.getTimestamp(x + kSmallCircle[0][0], y + kSmallCircle[0][1]);
         int cwIndex = 0;
@@ -246,7 +281,7 @@ public class CornerDetector implements StatelessOperator {
                     }
 
                     cwIndex=(ccwIndex+1)%kLargeCircleSize;
-                    cwTimestamp=sae.getTimestamp(x+kLargeCircle[cwIndex][0],kLargeCircle[cwIndex][1]);
+                    cwTimestamp=sae.getTimestamp(x+kLargeCircle[cwIndex][0],y+kLargeCircle[cwIndex][1]);
                     if(cwTimestamp<rightMin){
                         rightMin=cwTimestamp;
                     }

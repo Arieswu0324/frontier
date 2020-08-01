@@ -10,6 +10,10 @@
  ******************************************************************************/
 package uk.ac.imperial.lsds.seep.comm.serialization;
 
+import uk.ac.imperial.lsds.seep.event.Event;
+
+import java.util.List;
+
 public interface DataTupleI {
 
 	/**
@@ -32,5 +36,6 @@ public interface DataTupleI {
 	public double[] getDoubleArray(String attribute);
 	public float[] getFloatArray(String attribute);
 	public boolean getBoolean(String attribute);
+	public List<Event> getEvents(String attribute);
 	
 }

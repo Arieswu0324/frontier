@@ -10,6 +10,7 @@
  ******************************************************************************/
 package uk.ac.imperial.lsds.seep.operator.compose;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -59,7 +60,7 @@ public class MultiOperator implements OperatorCode, ComposedOperator, Communicat
 	}
 
 	@Override
-	public void setUp() {
+	public void setUp() throws FileNotFoundException {
 		for(SubOperator so : subOperators){
 			so.setMultiOperator(this);
 			so.setUp();

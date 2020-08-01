@@ -10,6 +10,7 @@
  ******************************************************************************/
 package uk.ac.imperial.lsds.seep.operator.compose;
 
+import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +23,7 @@ public interface SubOperatorAPI extends Serializable{
 	public boolean isMostLocalUpstream();
 	public void connectSubOperatorTo(int localStreamId, SubOperator so);
 	
-	public void setUp();
+	public void setUp() throws FileNotFoundException;
 	public void processData(DataTuple data);
 	public void processData(List<DataTuple> dataList);
 	

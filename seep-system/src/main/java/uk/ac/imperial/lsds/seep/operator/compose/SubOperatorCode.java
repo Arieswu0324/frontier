@@ -21,7 +21,7 @@ public interface SubOperatorCode extends Serializable{
 	//public LocalApi api = LocalApi.getInstance();
 	
 	public void setUp() throws FileNotFoundException;
-	public void processData(DataTuple data);
+	public void processData(DataTuple data) throws InterruptedException;
 	public void processData(List<DataTuple> dataList);
 	
 }

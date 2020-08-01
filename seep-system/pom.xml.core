@@ -29,7 +29,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>3.8.1</version>
+      <version>4.7</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -115,6 +115,13 @@
     <artifactId>imgscalr-lib</artifactId>
     <version>4.2</version>
 </dependency>
+
+  <!-- https://mvnrepository.com/artifact/org.ujmp/ujmp-core -->
+      <dependency>
+          <groupId>org.ujmp</groupId>
+          <artifactId>ujmp-core</artifactId>
+          <version>0.3.0</version>
+      </dependency>
 
   </dependencies>
   

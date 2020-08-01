@@ -12,6 +12,7 @@
  ******************************************************************************/
 package uk.ac.imperial.lsds.seep.processingunit;
 
+import java.io.FileNotFoundException;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -287,7 +288,7 @@ public class StatefulProcessingUnit implements IProcessingUnit{
 	}
 	
 	@Override
-	public void initOperator(){
+	public void initOperator() throws FileNotFoundException {
 		runningOp.setUp();
 	}
 	

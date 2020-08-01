@@ -12,6 +12,7 @@
  ******************************************************************************/
 package uk.ac.imperial.lsds.seep.processingunit;
 
+import java.io.FileNotFoundException;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Map;
@@ -59,7 +60,7 @@ public interface IProcessingUnit {
 
 	public void startDataProcessing();
 
-	public void initOperator();
+	public void initOperator() throws FileNotFoundException;
 
 	public Map<String, Integer> createTupleAttributeMapper();
 

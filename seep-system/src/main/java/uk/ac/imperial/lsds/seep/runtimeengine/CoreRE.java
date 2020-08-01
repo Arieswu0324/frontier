@@ -11,6 +11,7 @@
  ******************************************************************************/
 package uk.ac.imperial.lsds.seep.runtimeengine;
 
+import java.io.FileNotFoundException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.InetAddress;
@@ -202,7 +203,7 @@ public class CoreRE {
 		return starTopology;
 	}
 	
-	public void setOpReady(int opId) {
+	public void setOpReady(int opId) throws FileNotFoundException {
 		processingUnit.setOpReady(opId);
 		if(processingUnit.isOperatorReady()){
 			LOG.info("-> All operators in this unit are ready. Initializing communications...");

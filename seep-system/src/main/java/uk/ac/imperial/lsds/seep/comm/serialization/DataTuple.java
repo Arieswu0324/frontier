@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import uk.ac.imperial.lsds.seep.aries.operators.Event;
+import uk.ac.imperial.lsds.seep.event.Event;
 import uk.ac.imperial.lsds.seep.comm.serialization.messages.Payload;
 import uk.ac.imperial.lsds.seep.comm.serialization.messages.TuplePayload;
 
@@ -185,10 +185,13 @@ public class DataTuple implements DataTupleI, Serializable{
 		return (Object)payload.attrValues.get(idxMapper.get(attribute));
 	}
 
-	//for event-batching, archive to DataTupleI later
+	@Override
+	//for event-batching
 	public List<Event> getEvents(String attribute){
+
 		return (List)payload.attrValues.get(idxMapper.get(attribute));
 	}
+
 	
 	@Override
 	public boolean getBoolean(String attribute){

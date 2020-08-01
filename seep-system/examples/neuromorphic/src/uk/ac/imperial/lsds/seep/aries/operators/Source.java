@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.ac.imperial.lsds.seep.comm.serialization.DataTuple;
 import uk.ac.imperial.lsds.seep.comm.serialization.messages.TuplePayload;
+import uk.ac.imperial.lsds.seep.event.Event;
 import uk.ac.imperial.lsds.seep.operator.StatelessOperator;
 
 import java.io.*;
@@ -36,7 +37,7 @@ public class Source implements StatelessOperator {
 
     @Override
     public void processData(DataTuple dt) {
-        int batchId = 0;
+        long tupleId = 0;
         int eventCount = 0;
         ArrayList<Event> eventList = new ArrayList<>();
 
@@ -46,26 +47,31 @@ public class Source implements StatelessOperator {
         try{
             BufferedReader fr = new BufferedReader(new FileReader(testDir));    //read data through IO streams
 
-            while((eventLine=fr.readLine())!=null){ //condition: EOF
-                eventLine = fr.readLine();
+            eventLine=fr.readLine();
+            while(eventLine!=null){ //condition: EOF
+
                 String[] strings = eventLine.split("\\s+");
-//                String timestamp = strings[0];
-//                String x = strings[1];
-//                String y = strings[2];
-//                String polarity = strings[3];
-//                String label = "false";
+
                 Event event = new Event(strings[0],strings[1],strings[2],strings[3]);
                 eventCount++;
                 eventList.add(event);
+		
+		        eventLine=fr.readLine();
 
-                if(eventCount%50==0) {  //batch size 50 for experiment, fix me when EOF but not 50
-                    DataTuple output = data.newTuple(batchId, eventList);
+                if(eventCount%2500==0 || eventLine == null) {  //batch size 50 for experiment
+                    DataTuple output = data.newTuple(tupleId, eventList);
+
+
                     api.send_highestWeight(output);
-                    batchId++;
+                    //api.send(output);
+                    Thread.sleep(1000); //time control
+                    System.out.println("Source sending tuple: Id---"+tupleId+"---"+eventList.size()+"events");
+                    tupleId++;
 
                     //empty eventList for next batch
                     eventCount=0;
                     eventList.clear();
+
                 }
 
             }
@@ -74,7 +80,7 @@ public class Source implements StatelessOperator {
             e.printStackTrace();
         }
         finally{
-            System.exit(0);
+            //System.exit(0);
         }
 
     }

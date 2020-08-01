@@ -14,6 +14,7 @@ package uk.ac.imperial.lsds.seep.processingunit;
 
 import com.codahale.metrics.Timer;
 
+import java.io.FileNotFoundException;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -167,7 +168,7 @@ public class StatelessProcessingUnit implements IProcessingUnit {
 	}
 
 	@Override
-	public void initOperator() {
+	public void initOperator() throws FileNotFoundException {
 		runningOp.setUp();
 	}
 
@@ -296,7 +297,7 @@ public class StatelessProcessingUnit implements IProcessingUnit {
 				// REMOTE SYNC
 				else if(dest instanceof SynchronousCommunicationChannel){
 					///\fixme{do some proper thing with var now}
-					outputQueues.get(target).ToDownstream(dt, dest);
+					outputQueues.get(target).sendToDownstream(dt, dest);
 //System.out.println("Send to: "+dest.toString());
 				}
 				// LOCAL
