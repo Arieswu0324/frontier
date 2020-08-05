@@ -33,7 +33,7 @@ public class LocalApi implements API, CommunicationPrimitives, Serializable{
 	}
 	
 	@Override
-	public void send(DataTuple dt) {
+	public void send(DataTuple dt) throws InterruptedException {
 		so.send(dt);
 	}
 
@@ -53,7 +53,7 @@ public class LocalApi implements API, CommunicationPrimitives, Serializable{
 	}
 
 	@Override
-	public void send_toStreamId(DataTuple dt, int streamId) {
+	public void send_toStreamId(DataTuple dt, int streamId) throws InterruptedException {
 		so.send_toStreamId(dt, streamId);
 	}
 

@@ -271,7 +271,7 @@ public class Operator implements Serializable, EndPoint, Connectable, Callback {
 		}
 	}
 
-	public void processData(DataTuple data){
+	public void processData(DataTuple data) throws InterruptedException {
 		operatorCode.processData(data);
 	}
 

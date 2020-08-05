@@ -57,7 +57,11 @@ public class DataConsumer implements Runnable {
 					DataTuple data = dso.pull();
 //					DataTuple[] dataBatch = ((InputQueue)dso).pullMiniBatch();
 					if(owner.checkSystemStatus()){
-						owner.forwardData(data);
+						try {
+							owner.forwardData(data);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
 //						for(int i = 0; i<dataBatch.length; i++){
 //							DataTuple data = dataBatch[i];
 //							if(data != null)
@@ -95,13 +99,17 @@ public class DataConsumer implements Runnable {
 		}
 
 		@Override
-		public void run() {			
+		public void run() {
 			if(dsi instanceof InputQueue || dsi instanceof OutOfOrderInputQueue || dsi instanceof OutOfOrderFairInputQueue){
 				logger.info("Pulling from input queue.");
 				while(doWork){
 					DataTuple data = dsi.pull();
 					if(owner.checkSystemStatus()){
-						owner.forwardData(data);
+						try {
+							owner.forwardData(data);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
 					}
 				}
 			}

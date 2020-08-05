@@ -49,7 +49,7 @@ public class MultiOperator implements OperatorCode, ComposedOperator, Communicat
 	/** Implementation of OperatorCode interface **/
 	
 	@Override
-	public void processData(DataTuple data) {
+	public void processData(DataTuple data) throws InterruptedException {
 		// just call the first op to start processing data
 		mostUpstream.processData(data);
 	}

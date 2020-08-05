@@ -24,7 +24,7 @@ public interface SubOperatorAPI extends Serializable{
 	public void connectSubOperatorTo(int localStreamId, SubOperator so);
 	
 	public void setUp() throws FileNotFoundException;
-	public void processData(DataTuple data);
+	public void processData(DataTuple data) throws InterruptedException;
 	public void processData(List<DataTuple> dataList);
 	
 }

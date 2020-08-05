@@ -56,8 +56,12 @@ public class StatefulProcessingWorker implements Runnable{
 			}
 			
 			DataTuple dt = iq.pull();
-			runningOp.processData(dt);
-			
+			try {
+				runningOp.processData(dt);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
 			executorMutex.release();
 		}
 	}

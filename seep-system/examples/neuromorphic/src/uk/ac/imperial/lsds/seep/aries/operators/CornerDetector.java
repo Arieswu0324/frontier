@@ -60,7 +60,7 @@ public class CornerDetector implements StatelessOperator {
         long tupleId = data.getLong("tupleId");
         ArrayList<Event> eventList = (ArrayList<Event>) data.getEvents("eventList");
 
-        System.out.println("CornerDetector received tuple: ID "+tupleId+"----"+eventList.size()+" events");
+        System.out.println("CornerDetector received tuple: ID "+tupleId+"----"+eventList.size()+" events---starts with timestamp: "+eventList.get(0).timestamp);
 
         ArrayList<Event> newEventList = cornerDetector(eventList);  //go through arc* algorithm
 

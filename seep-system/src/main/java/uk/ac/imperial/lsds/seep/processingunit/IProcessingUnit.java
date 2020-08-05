@@ -58,13 +58,13 @@ public interface IProcessingUnit {
 
 	public PUContext setUpRemoteConnections();
 
-	public void startDataProcessing();
+	public void startDataProcessing() throws InterruptedException;
 
 	public void initOperator() throws FileNotFoundException;
 
 	public Map<String, Integer> createTupleAttributeMapper();
 
-	public void processData(DataTuple data);
+	public void processData(DataTuple data) throws InterruptedException;
 
 	public void processData(ArrayList<DataTuple> data);
 

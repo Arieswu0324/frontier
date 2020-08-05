@@ -575,7 +575,7 @@ public class CoreRE {
      * This method is blocking. So, basically, if invoked from NodeManager directly,
      * we are unable to send any more control tuples to the node.
      */
-	public void startDataProcessing(){
+	public void startDataProcessing() throws InterruptedException {
 		LOG.info("-> Starting to process data...");
 		processingUnit.startDataProcessing();
 	}
@@ -634,7 +634,7 @@ public class CoreRE {
 		return dsa;
 	}
 	
-	public void forwardData(DataTuple data){
+	public void forwardData(DataTuple data) throws InterruptedException {
 		processingUnit.processData(data);
 	}
 	

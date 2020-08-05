@@ -21,6 +21,7 @@ public class Sink implements StatelessOperator {
     private static final Logger logger = LoggerFactory.getLogger(Sink.class);
 
     private long numTuples;
+    private int warmUpTuples;
     private long tStart;
     private long tuplesReceived=0;
 
@@ -28,7 +29,8 @@ public class Sink implements StatelessOperator {
     @Override
     public void setUp() {
         logger.info("Sink setup complete");
-        numTuples=2; // test
+        numTuples=5; // test
+        warmUpTuples=2;
     }
 
     @Override
@@ -40,27 +42,33 @@ public class Sink implements StatelessOperator {
             logger.info("SNK: Received initial tuple at t="+System.currentTimeMillis());
         }
 
-        tuplesReceived++;
-        int count = 0;
+        if(tuplesReceived<warmUpTuples){
+            System.out.println("Warm up tuples received");
+        }else {
 
-        long tupleId = data.getLong("tupleId");
-        ArrayList<Event> eventList = (ArrayList<Event>) data.getEvents("eventList");
+            int count = 0;
 
-        System.out.println("SNK received tuple: ID "+tupleId+"----"+eventList.size()+" events" +
-                "---starts with timestamp "+ eventList.get(0).timestamp);
+            long tupleId = data.getLong("tupleId");
+            ArrayList<Event> eventList = (ArrayList<Event>) data.getEvents("eventList");
 
-        for(Event e : eventList){
-            if(e.label.equals("true")) {
-                logger.info("TupleId: " + tupleId +
-                        "----Event timestamp: " + e.timestamp + " ----corner event? " + e.label);
-                count++;
+            System.out.println("SNK received tuple: ID " + tupleId + "----" + eventList.size() + " events" +
+                    "---starts with timestamp " + eventList.get(0).timestamp);
+
+            for (Event e : eventList) {
+                if (e.label.equals("true")) {
+                    logger.info("TupleId: " + tupleId +
+                            "----Event timestamp: " + e.timestamp + " ----corner event? " + e.label);
+                    count++;
+                }
             }
+
+            logger.info("SNK received: tupleId " + tupleId + "----" + count + " corner events are detected");
         }
 
-        logger.info("SNK received: tupleId "+tupleId+"----"+count+" corner events are detected");
+        tuplesReceived++;
 
-        if(tuplesReceived>=numTuples){
-            logger.info("Sink finished with total tuples: "+ tuplesReceived);
+        if(tuplesReceived>=numTuples+warmUpTuples){
+            logger.info("Sink finished with total tuples: "+ tuplesReceived+" ("+warmUpTuples+") warm-up tuples included");
             System.exit(0);
         }
 

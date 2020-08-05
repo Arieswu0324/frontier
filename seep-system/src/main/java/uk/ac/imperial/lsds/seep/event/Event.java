@@ -1,5 +1,7 @@
 package uk.ac.imperial.lsds.seep.event;
 
+import uk.ac.imperial.lsds.seep.comm.serialization.KryoSerializer;
+
 import java.io.Serializable;
 
 /*

@@ -47,6 +47,7 @@ import uk.ac.imperial.lsds.seep.comm.serialization.controlhelpers.ScaleOutInfo;
 import uk.ac.imperial.lsds.seep.comm.serialization.controlhelpers.StateAck;
 import uk.ac.imperial.lsds.seep.comm.serialization.controlhelpers.StateChunk;
 import uk.ac.imperial.lsds.seep.comm.serialization.controlhelpers.UpDownRCtrl;
+import uk.ac.imperial.lsds.seep.event.Event;
 import uk.ac.imperial.lsds.seep.infrastructure.NodeManager;
 import uk.ac.imperial.lsds.seep.runtimeengine.CoreRE;
 import uk.ac.imperial.lsds.seep.runtimeengine.CoreRE.ControlTupleType;
@@ -112,6 +113,7 @@ public class IncomingDataHandlerWorker implements Runnable{
 		k.register(ArrayList.class, new ArrayListSerializer());
 		k.register(Payload.class);
 		k.register(TuplePayload.class);
+		k.register(Event.class);
 		k.register(BatchTuplePayload.class);
 
 		k.register(ControlTuple.class);

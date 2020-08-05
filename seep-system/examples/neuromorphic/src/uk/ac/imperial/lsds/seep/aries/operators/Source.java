@@ -25,7 +25,8 @@ public class Source implements StatelessOperator {
     private static final long serialVersionUID = 1L;
     private static final Logger logger = LoggerFactory.getLogger(Source.class);
 
-    private final String testDir="resources/shapes_dataset/5000_events.txt";
+
+    private final String testDir="resources/shapes_dataset/5000_events-warmUps.txt";
     String eventLine=null;
 
     @Override
@@ -58,14 +59,15 @@ public class Source implements StatelessOperator {
 		
 		        eventLine=fr.readLine();
 
-                if(eventCount%2500==0 || eventLine == null) {  //batch size 50 for experiment
+                if(eventCount%1000==0 || eventLine == null) {  //batch size 50 for experiment
                     DataTuple output = data.newTuple(tupleId, eventList);
 
 
                     api.send_highestWeight(output);
                     //api.send(output);
                     Thread.sleep(1000); //time control
-                    System.out.println("Source sending tuple: Id---"+tupleId+"---"+eventList.size()+"events");
+                    System.out.println("Source sending tuple: Id---"+tupleId+"---"+eventList.size()+"events, " +
+                            "starts with timestamp: "+eventList.get(0).timestamp);
                     tupleId++;
 
                     //empty eventList for next batch

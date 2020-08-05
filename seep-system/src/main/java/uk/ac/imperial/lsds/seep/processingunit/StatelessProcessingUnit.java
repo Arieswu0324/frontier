@@ -235,7 +235,7 @@ public class StatelessProcessingUnit implements IProcessingUnit {
 	}
 
 	@Override
-	public void processData(DataTuple data) {
+	public void processData(DataTuple data) throws InterruptedException {
 		// TODO: Adjust timestamp of state
         
         // Seep monitoring: notify start of data tuple processing
@@ -315,7 +315,7 @@ public class StatelessProcessingUnit implements IProcessingUnit {
                     notifyThat(operatorId).operatorEnd(context);
 				}
 			}
-			catch(ArrayIndexOutOfBoundsException aioobe){
+			catch(ArrayIndexOutOfBoundsException | InterruptedException aioobe){
 				System.out.println("Targets size: "+targets.size()+" Target-Index: "+target+" downstreamSize: "+ctx.getDownstreamTypeConnection().size());
 				aioobe.printStackTrace();
 			}
@@ -513,7 +513,7 @@ public class StatelessProcessingUnit implements IProcessingUnit {
 	}
 
 	@Override
-	public void startDataProcessing() {
+	public void startDataProcessing() throws InterruptedException {
 		/// \todo{Find a better way to start the operator...}
 		DataTuple fake = DataTuple.getNoopDataTuple();
 		fake = null;

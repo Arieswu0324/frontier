@@ -41,7 +41,11 @@ public class StatelessProcessingWorker implements Runnable{
 	public void run() {
 		while(true){
 			DataTuple dt = iq.pull();
-			runningOp.processData(dt);
+			try {
+				runningOp.processData(dt);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

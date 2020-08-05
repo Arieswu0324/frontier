@@ -281,7 +281,7 @@ public class StatefulProcessingUnit implements IProcessingUnit{
 	}
 	
 	@Override
-	public void startDataProcessing(){
+	public void startDataProcessing() throws InterruptedException {
 		/// \todo{Find a better way to start the operator...}
 		DataTuple fake = DataTuple.getNoopDataTuple();
 		this.runningOp.processData(fake);
@@ -310,7 +310,7 @@ public class StatefulProcessingUnit implements IProcessingUnit{
 	/** Runtime methods **/
 	
 	@Override
-	public void processData(DataTuple data){
+	public void processData(DataTuple data) throws InterruptedException {
 		// Get the mutex		
 		if(multiCoreEnabled){
 			try {
@@ -406,7 +406,7 @@ public class StatefulProcessingUnit implements IProcessingUnit{
 					operatorObj.processData(dt);
 				}
 			}
-			catch(ArrayIndexOutOfBoundsException aioobe){
+			catch(ArrayIndexOutOfBoundsException | InterruptedException aioobe){
 				System.out.println("Targets size: "+targets.size()+" Target-Index: "+target+" downstreamSize: "+ctx.getDownstreamTypeConnection().size());
 				aioobe.printStackTrace();
 			}

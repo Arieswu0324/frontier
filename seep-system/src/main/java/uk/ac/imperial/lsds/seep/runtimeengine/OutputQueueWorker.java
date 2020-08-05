@@ -34,6 +34,7 @@ import uk.ac.imperial.lsds.seep.comm.serialization.controlhelpers.ScaleOutInfo;
 import uk.ac.imperial.lsds.seep.comm.serialization.controlhelpers.StateAck;
 import uk.ac.imperial.lsds.seep.comm.serialization.controlhelpers.StateChunk;
 import uk.ac.imperial.lsds.seep.comm.serialization.controlhelpers.UpDownRCtrl;
+import uk.ac.imperial.lsds.seep.event.Event;
 import uk.ac.imperial.lsds.seep.runtimeengine.CoreRE;
 import uk.ac.imperial.lsds.seep.reliable.MemoryChunk;
 import uk.ac.imperial.lsds.seep.manet.Query;
@@ -101,6 +102,7 @@ public class OutputQueueWorker
 		k.register(ArrayList.class, new ArrayListSerializer());
 		k.register(Payload.class);
 		k.register(TuplePayload.class);
+		k.register(Event.class);
 		k.register(BatchTuplePayload.class);
 
 		k.register(ControlTuple.class);

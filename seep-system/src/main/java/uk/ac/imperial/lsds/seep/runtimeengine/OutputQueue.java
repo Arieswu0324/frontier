@@ -27,6 +27,7 @@ import uk.ac.imperial.lsds.seep.comm.serialization.messages.BatchTuplePayload;
 import uk.ac.imperial.lsds.seep.comm.serialization.messages.Payload;
 import uk.ac.imperial.lsds.seep.comm.serialization.messages.TuplePayload;
 import uk.ac.imperial.lsds.seep.comm.serialization.serializers.ArrayListSerializer;
+import uk.ac.imperial.lsds.seep.event.Event;
 import uk.ac.imperial.lsds.seep.infrastructure.NodeManager;
 import uk.ac.imperial.lsds.seep.operator.EndPoint;
 
@@ -67,6 +68,7 @@ public class OutputQueue {
 		k.register(ArrayList.class, new ArrayListSerializer());
 		k.register(Payload.class);
 		k.register(TuplePayload.class);
+		//k.register(Event.class);
 		k.register(BatchTuplePayload.class);
 		return k;
 	}

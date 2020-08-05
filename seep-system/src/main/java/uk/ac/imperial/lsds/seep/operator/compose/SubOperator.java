@@ -68,7 +68,7 @@ public class SubOperator implements SubOperatorAPI, CommunicationPrimitives, Cal
 	/** Implementation of CommunicationPrimitives **/
 	
 	@Override
-	public void send(DataTuple dt) {
+	public void send(DataTuple dt) throws InterruptedException {
 		if(localDownstream.size() == 1){
 			SubOperator target = localDownstream.entrySet().iterator().next().getValue();
 			if(!target.isMostLocalDownstream()){
@@ -84,7 +84,7 @@ public class SubOperator implements SubOperatorAPI, CommunicationPrimitives, Cal
 	}
 	
 	@Override
-	public void send_toStreamId(DataTuple dt, int streamId) {
+	public void send_toStreamId(DataTuple dt, int streamId) throws InterruptedException {
 		SubOperator target = localDownstream.get(streamId);
 		if(!target.isMostLocalDownstream()){
 			target.processData(dt);
@@ -159,7 +159,7 @@ public class SubOperator implements SubOperatorAPI, CommunicationPrimitives, Cal
 	}
 
 	@Override
-	public void processData(DataTuple data) {
+	public void processData(DataTuple data) throws InterruptedException {
 		code.processData(data);
 	}
 
