@@ -13,6 +13,7 @@
 package uk.ac.imperial.lsds.seep.processingunit;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Map;
@@ -58,13 +59,13 @@ public interface IProcessingUnit {
 
 	public PUContext setUpRemoteConnections();
 
-	public void startDataProcessing() throws InterruptedException;
+	public void startDataProcessing() throws InterruptedException, IOException;
 
 	public void initOperator() throws FileNotFoundException;
 
 	public Map<String, Integer> createTupleAttributeMapper();
 
-	public void processData(DataTuple data) throws InterruptedException;
+	public void processData(DataTuple data) throws InterruptedException, IOException;
 
 	public void processData(ArrayList<DataTuple> data);
 

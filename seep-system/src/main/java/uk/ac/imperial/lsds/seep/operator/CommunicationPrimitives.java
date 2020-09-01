@@ -12,9 +12,11 @@ package uk.ac.imperial.lsds.seep.operator;
 
 import uk.ac.imperial.lsds.seep.comm.serialization.DataTuple;
 
+import java.io.IOException;
+
 public interface CommunicationPrimitives {
 
-	public void send(DataTuple dt) throws InterruptedException;
+	public void send(DataTuple dt) throws InterruptedException, IOException;
 	public void send_lowestCost(DataTuple dt);
 	public void send_highestWeight(DataTuple dt);
 	public void send_toIndex(DataTuple dt, int idx);
@@ -22,7 +24,7 @@ public interface CommunicationPrimitives {
 	public void send_toStreamId_splitKey(DataTuple dt, int streamId, int key);
 	public void send_toStreamId_toAll(DataTuple dt, int streamId);
 	public void send_all(DataTuple dt);
-	public void send_toStreamId(DataTuple dt, int streamId) throws InterruptedException;
+	public void send_toStreamId(DataTuple dt, int streamId) throws InterruptedException, IOException;
 	public void send_toStreamId_toAll_threadPool(DataTuple dt, int streamId);
         public void send_all_threadPool(DataTuple dt);
         public void send_to_OpId(DataTuple dt, int opId);

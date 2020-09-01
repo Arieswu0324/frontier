@@ -23,9 +23,7 @@ public class CornerDetector implements StatelessOperator {
     private static final long serialVersionUID = 1L;
     private static final Logger logger = LoggerFactory.getLogger(CornerDetector.class);
 
-//    private Stats stats;
-//    private Stats utilStats;      //not sure what are these used for
-
+        //Arrays indicating positions of the neighbouring pixels of the event of interest
        static final int[][] kSmallCircle = {{0, 3}, {1, 3}, {2, 2}, {3, 1},
                 {3, 0}, {3, -1}, {2, -2}, {1, -3},
                 {0, -3}, {-1, -3}, {-2, -2}, {-3, -1},
@@ -47,36 +45,22 @@ public class CornerDetector implements StatelessOperator {
     @Override
     public void setUp() throws FileNotFoundException {
         logger.info("CornerDetector setup complete");
-//        stats = new Stats(api.getOperatorId());
-//        utilStats = new Stats(api.getOperatorId());
 
     }
 
     @Override
     public void processData(DataTuple data) {
 
-        //long tProcessStart = System.currentTimeMillis();
 
         long tupleId = data.getLong("tupleId");
         ArrayList<Event> eventList = (ArrayList<Event>) data.getEvents("eventList");
 
-        System.out.println("CornerDetector received tuple: ID "+tupleId+"----"+eventList.size()+" events---starts with timestamp: "+eventList.get(0).timestamp);
 
         ArrayList<Event> newEventList = cornerDetector(eventList);  //go through arc* algorithm
 
         DataTuple output = data.setValues(tupleId,newEventList);
 
-        for(Event e : newEventList){
-            if(e.label=="true"){
-                System.out.println("Corner event: "+e.timestamp+"---label: "+e.label);
 
-        }
-
-        }
-        //api.send(output);
-//        long tProcessEnd = System.currentTimeMillis();
-//        stats.add(tProcessEnd,eventList.toString().getBytes().length);
-//        utilStats.addWorkDone(tProcessEnd,tProcessEnd-tProcessStart);
         api.send_highestWeight(output);
         System.out.println("CornerDetector sending tuple: ID "+tupleId+"----"+newEventList.size()+" events" +
                 "---starts with timestamp "+ newEventList.get(0).timestamp);
@@ -85,6 +69,7 @@ public class CornerDetector implements StatelessOperator {
 
     private ArrayList<Event> cornerDetector(ArrayList<Event> eventList) {
 
+        //initiate SAE matrix for different polarity 0 and 1
         SAE[] sae = new SAE[2];
         SAE[] saeLatest = new SAE[2];
         sae[0] = new SAE(240,180);
@@ -94,6 +79,7 @@ public class CornerDetector implements StatelessOperator {
 
         int cornerCnt = 0;
 
+        //register event timestamps with its corresponding SAE
         for(Event event: eventList){
             int x = event.x;
             int y = event.y;
@@ -103,8 +89,8 @@ public class CornerDetector implements StatelessOperator {
             double tLast = saeLatest[pol].getTimestamp(x,y);
             double tLast_inv=saeLatest[pol_inv].getTimestamp(x,y);
 
-            //filter
-            if((event.timestamp>tLast+0.05)||(tLast_inv>tLast)){//threshold 50ms=0.05s for test
+            //filtering method
+            if((event.timestamp>tLast+0.05)||(tLast_inv>tLast)){ //threshold 50ms=0.05s, same as in the publication
                 tLast=event.timestamp;
                 saeLatest[pol].setTimestamp(tLast,x,y);
                 sae[pol].setTimestamp(event.timestamp,x,y);
@@ -121,18 +107,19 @@ public class CornerDetector implements StatelessOperator {
                 continue;   //event.label = false by default
 
              //check corner event, arc* algorithm
-            //event.label = String.valueOf(isCorner(event,sae[event.polarity]));
+
             if(isCorner(event,sae[event.polarity])){
                 event.label="true";
-                //System.out.println("Corner event: "+ event.timestamp+"---label: "+ event.label);
+                //System.out.println("Corner event: "+ event.timestamp+"---label: "+ event.label); //test
                 cornerCnt++;
             }
         }
 
-        System.out.println(cornerCnt+" events are detected");
+       // System.out.println(cornerCnt+" events are detected"); //test
             return eventList;
     }
 
+    //Arc* algorithm
     private boolean isCorner(Event event, SAE sae) {
         boolean isCorner = false;
         int x = event.x;
@@ -152,14 +139,17 @@ public class CornerDetector implements StatelessOperator {
             }
         }//arcTimestamp records max value in the circle
 
+        //move steps
         ccwIndex = (cwIndex - 1 + kSmallCircleSize) % kSmallCircleSize;
         cwIndex = (cwIndex + 1) % kSmallCircleSize;
+
+        //get pixels in the vicinity by location array
         double ccwTimestamp = sae.getTimestamp(x + kSmallCircle[ccwIndex][0], y + kSmallCircle[ccwIndex][1]);
         double cwTimestamp = sae.getTimestamp(x + kSmallCircle[cwIndex][0], y + kSmallCircle[cwIndex][1]);
         double leftMin = ccwTimestamp;
         double rightMin = cwTimestamp;
 
-        //expand arc
+        //expand arc at the inner circle
         int iteration = 1;
         for (; iteration < kSmallMinThresh; iteration++) {
             if(cwTimestamp>ccwTimestamp) {

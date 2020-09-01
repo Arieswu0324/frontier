@@ -10,6 +10,7 @@
  ******************************************************************************/
 package uk.ac.imperial.lsds.seep.runtimeengine;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -59,7 +60,7 @@ public class DataConsumer implements Runnable {
 					if(owner.checkSystemStatus()){
 						try {
 							owner.forwardData(data);
-						} catch (InterruptedException e) {
+						} catch (InterruptedException | IOException e) {
 							e.printStackTrace();
 						}
 //						for(int i = 0; i<dataBatch.length; i++){
@@ -107,7 +108,7 @@ public class DataConsumer implements Runnable {
 					if(owner.checkSystemStatus()){
 						try {
 							owner.forwardData(data);
-						} catch (InterruptedException e) {
+						} catch (InterruptedException | IOException e) {
 							e.printStackTrace();
 						}
 					}

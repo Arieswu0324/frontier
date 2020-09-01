@@ -11,6 +11,7 @@
 package uk.ac.imperial.lsds.seep.operator.compose;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -68,7 +69,7 @@ public class SubOperator implements SubOperatorAPI, CommunicationPrimitives, Cal
 	/** Implementation of CommunicationPrimitives **/
 	
 	@Override
-	public void send(DataTuple dt) throws InterruptedException {
+	public void send(DataTuple dt) throws InterruptedException, IOException {
 		if(localDownstream.size() == 1){
 			SubOperator target = localDownstream.entrySet().iterator().next().getValue();
 			if(!target.isMostLocalDownstream()){
@@ -84,7 +85,7 @@ public class SubOperator implements SubOperatorAPI, CommunicationPrimitives, Cal
 	}
 	
 	@Override
-	public void send_toStreamId(DataTuple dt, int streamId) throws InterruptedException {
+	public void send_toStreamId(DataTuple dt, int streamId) throws InterruptedException, IOException {
 		SubOperator target = localDownstream.get(streamId);
 		if(!target.isMostLocalDownstream()){
 			target.processData(dt);
@@ -159,7 +160,7 @@ public class SubOperator implements SubOperatorAPI, CommunicationPrimitives, Cal
 	}
 
 	@Override
-	public void processData(DataTuple data) throws InterruptedException {
+	public void processData(DataTuple data) throws InterruptedException, IOException {
 		code.processData(data);
 	}
 

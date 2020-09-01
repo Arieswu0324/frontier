@@ -19,6 +19,8 @@ import uk.ac.imperial.lsds.seep.operator.Operator;
 import uk.ac.imperial.lsds.seep.runtimeengine.DataStructureAdapter;
 import uk.ac.imperial.lsds.seep.runtimeengine.InputQueue;
 
+import java.io.IOException;
+
 public class StatelessProcessingWorker implements Runnable{
 	
 	final private Logger LOG = LoggerFactory.getLogger(StatelessProcessingWorker.class);
@@ -43,7 +45,7 @@ public class StatelessProcessingWorker implements Runnable{
 			DataTuple dt = iq.pull();
 			try {
 				runningOp.processData(dt);
-			} catch (InterruptedException e) {
+			} catch (InterruptedException | IOException e) {
 				e.printStackTrace();
 			}
 		}

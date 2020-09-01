@@ -13,6 +13,7 @@
 package uk.ac.imperial.lsds.seep.processingunit;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -281,7 +282,7 @@ public class StatefulProcessingUnit implements IProcessingUnit{
 	}
 	
 	@Override
-	public void startDataProcessing() throws InterruptedException {
+	public void startDataProcessing() throws InterruptedException, IOException {
 		/// \todo{Find a better way to start the operator...}
 		DataTuple fake = DataTuple.getNoopDataTuple();
 		this.runningOp.processData(fake);
@@ -310,7 +311,7 @@ public class StatefulProcessingUnit implements IProcessingUnit{
 	/** Runtime methods **/
 	
 	@Override
-	public void processData(DataTuple data) throws InterruptedException {
+	public void processData(DataTuple data) throws InterruptedException, IOException {
 		// Get the mutex		
 		if(multiCoreEnabled){
 			try {
@@ -406,7 +407,7 @@ public class StatefulProcessingUnit implements IProcessingUnit{
 					operatorObj.processData(dt);
 				}
 			}
-			catch(ArrayIndexOutOfBoundsException | InterruptedException aioobe){
+			catch(ArrayIndexOutOfBoundsException | InterruptedException | IOException aioobe){
 				System.out.println("Targets size: "+targets.size()+" Target-Index: "+target+" downstreamSize: "+ctx.getDownstreamTypeConnection().size());
 				aioobe.printStackTrace();
 			}

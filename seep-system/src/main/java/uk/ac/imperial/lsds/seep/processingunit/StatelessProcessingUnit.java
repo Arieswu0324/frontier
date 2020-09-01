@@ -15,6 +15,7 @@ package uk.ac.imperial.lsds.seep.processingunit;
 import com.codahale.metrics.Timer;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -235,7 +236,7 @@ public class StatelessProcessingUnit implements IProcessingUnit {
 	}
 
 	@Override
-	public void processData(DataTuple data) throws InterruptedException {
+	public void processData(DataTuple data) throws InterruptedException, IOException {
 		// TODO: Adjust timestamp of state
         
         // Seep monitoring: notify start of data tuple processing
@@ -315,7 +316,7 @@ public class StatelessProcessingUnit implements IProcessingUnit {
                     notifyThat(operatorId).operatorEnd(context);
 				}
 			}
-			catch(ArrayIndexOutOfBoundsException | InterruptedException aioobe){
+			catch(ArrayIndexOutOfBoundsException | InterruptedException | IOException aioobe){
 				System.out.println("Targets size: "+targets.size()+" Target-Index: "+target+" downstreamSize: "+ctx.getDownstreamTypeConnection().size());
 				aioobe.printStackTrace();
 			}
@@ -513,7 +514,7 @@ public class StatelessProcessingUnit implements IProcessingUnit {
 	}
 
 	@Override
-	public void startDataProcessing() throws InterruptedException {
+	public void startDataProcessing() throws InterruptedException, IOException {
 		/// \todo{Find a better way to start the operator...}
 		DataTuple fake = DataTuple.getNoopDataTuple();
 		fake = null;

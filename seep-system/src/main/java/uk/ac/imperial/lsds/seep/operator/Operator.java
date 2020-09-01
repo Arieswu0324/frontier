@@ -11,6 +11,7 @@
 package uk.ac.imperial.lsds.seep.operator;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -271,7 +272,7 @@ public class Operator implements Serializable, EndPoint, Connectable, Callback {
 		}
 	}
 
-	public void processData(DataTuple data) throws InterruptedException {
+	public void processData(DataTuple data) throws InterruptedException, IOException {
 		operatorCode.processData(data);
 	}
 

@@ -26,8 +26,10 @@ public class Source implements StatelessOperator {
     private static final Logger logger = LoggerFactory.getLogger(Source.class);
 
 
-    private final String testDir="resources/shapes_dataset/5000_events-warmUps.txt";
+    private final String testDir="resources/shapes_dataset/test.txt";
+    //private final String timeDir = "resources/shapes_dataset/images.txt";
     String eventLine=null;
+    String timeLine =null;
 
     @Override
     public void setUp(){
@@ -47,8 +49,13 @@ public class Source implements StatelessOperator {
 
         try{
             BufferedReader fr = new BufferedReader(new FileReader(testDir));    //read data through IO streams
+            //BufferedReader fr2 = new BufferedReader(new FileReader(timeDir)); //for time-based batching
 
             eventLine=fr.readLine();
+            //timeLine=fr2.readLine();
+//            String[] image_ts=timeLine.split("\\s+");
+//            double ts = Double.parseDouble(image_ts[0]);  //time-based batching
+
             while(eventLine!=null){ //condition: EOF
 
                 String[] strings = eventLine.split("\\s+");
@@ -59,29 +66,37 @@ public class Source implements StatelessOperator {
 		
 		        eventLine=fr.readLine();
 
-                if(eventCount%1000==0 || eventLine == null) {  //batch size 50 for experiment
+                if(eventCount%5000==0 || eventLine == null) {//size-based batching
+
+                //if(event.timestamp>=ts||eventLine==null||timeLine==null){ //time-based batching
                     DataTuple output = data.newTuple(tupleId, eventList);
 
 
                     api.send_highestWeight(output);
-                    //api.send(output);
-                    Thread.sleep(1000); //time control
+                    //Thread.sleep(1000); //time control
                     System.out.println("Source sending tuple: Id---"+tupleId+"---"+eventList.size()+"events, " +
                             "starts with timestamp: "+eventList.get(0).timestamp);
                     tupleId++;
 
                     //empty eventList for next batch
                     eventCount=0;
-                    eventList.clear();
+                    eventList = new ArrayList<>(); //Avoid reusing the same eventlist array in different events, so there could potentially be concurrent access by a different thread
+                    //ConcurrentModificationException
 
+//                    timeLine=fr2.readLine();
+//                    image_ts=timeLine.split("\\s+");
+//                    ts = Double.parseDouble(image_ts[0]);
+//                    System.out.println(ts);   //time-based batching
                 }
 
             }
             fr.close();
+            //fr2.close();
         }catch(Exception e){
             e.printStackTrace();
         }
         finally{
+            //add time-control before exit
             //System.exit(0);
         }
 

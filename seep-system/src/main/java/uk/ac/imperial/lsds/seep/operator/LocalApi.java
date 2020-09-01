@@ -10,6 +10,7 @@
  ******************************************************************************/
 package uk.ac.imperial.lsds.seep.operator;
 
+import java.io.IOException;
 import java.io.Serializable;
 
 import javax.sound.sampled.UnsupportedAudioFileException;
@@ -33,7 +34,7 @@ public class LocalApi implements API, CommunicationPrimitives, Serializable{
 	}
 	
 	@Override
-	public void send(DataTuple dt) throws InterruptedException {
+	public void send(DataTuple dt) throws InterruptedException, IOException {
 		so.send(dt);
 	}
 
@@ -53,7 +54,7 @@ public class LocalApi implements API, CommunicationPrimitives, Serializable{
 	}
 
 	@Override
-	public void send_toStreamId(DataTuple dt, int streamId) throws InterruptedException {
+	public void send_toStreamId(DataTuple dt, int streamId) throws InterruptedException, IOException {
 		so.send_toStreamId(dt, streamId);
 	}
 

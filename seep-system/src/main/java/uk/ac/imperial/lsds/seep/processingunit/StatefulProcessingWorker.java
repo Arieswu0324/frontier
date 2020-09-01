@@ -10,6 +10,7 @@
  ******************************************************************************/
 package uk.ac.imperial.lsds.seep.processingunit;
 
+import java.io.IOException;
 import java.util.concurrent.Semaphore;
 
 import org.slf4j.Logger;
@@ -58,7 +59,7 @@ public class StatefulProcessingWorker implements Runnable{
 			DataTuple dt = iq.pull();
 			try {
 				runningOp.processData(dt);
-			} catch (InterruptedException e) {
+			} catch (InterruptedException | IOException e) {
 				e.printStackTrace();
 			}
 

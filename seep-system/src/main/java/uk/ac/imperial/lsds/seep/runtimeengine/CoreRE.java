@@ -12,6 +12,7 @@
 package uk.ac.imperial.lsds.seep.runtimeengine;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.InetAddress;
@@ -575,7 +576,7 @@ public class CoreRE {
      * This method is blocking. So, basically, if invoked from NodeManager directly,
      * we are unable to send any more control tuples to the node.
      */
-	public void startDataProcessing() throws InterruptedException {
+	public void startDataProcessing() throws InterruptedException, IOException {
 		LOG.info("-> Starting to process data...");
 		processingUnit.startDataProcessing();
 	}
@@ -634,7 +635,7 @@ public class CoreRE {
 		return dsa;
 	}
 	
-	public void forwardData(DataTuple data) throws InterruptedException {
+	public void forwardData(DataTuple data) throws InterruptedException, IOException {
 		processingUnit.processData(data);
 	}
 	

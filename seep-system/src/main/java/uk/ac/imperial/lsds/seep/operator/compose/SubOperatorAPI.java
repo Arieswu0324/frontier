@@ -11,6 +11,7 @@
 package uk.ac.imperial.lsds.seep.operator.compose;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ public interface SubOperatorAPI extends Serializable{
 	public void connectSubOperatorTo(int localStreamId, SubOperator so);
 	
 	public void setUp() throws FileNotFoundException;
-	public void processData(DataTuple data) throws InterruptedException;
+	public void processData(DataTuple data) throws InterruptedException, IOException;
 	public void processData(List<DataTuple> dataList);
 	
 }

@@ -11,6 +11,7 @@
 package uk.ac.imperial.lsds.seep.operator.compose;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -49,7 +50,7 @@ public class MultiOperator implements OperatorCode, ComposedOperator, Communicat
 	/** Implementation of OperatorCode interface **/
 	
 	@Override
-	public void processData(DataTuple data) throws InterruptedException {
+	public void processData(DataTuple data) throws InterruptedException, IOException {
 		// just call the first op to start processing data
 		mostUpstream.processData(data);
 	}

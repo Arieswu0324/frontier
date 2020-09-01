@@ -1339,7 +1339,7 @@ System.out.println("sending stream state to : "+op.getOperatorId());
 		}
 		//Start clock in sink.
 		bcu.sendObject(snk.getOpContext().getOperatorStaticInformation().getMyNode(), "CLOCK");
-		LOG.info("SOURCES have been notified. System started.");
+		LOG.info("SOURCES have been notified. System started."+"at "+System.currentTimeMillis());
 		systemIsRunning = true;
 	}
     
